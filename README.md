@@ -11,15 +11,14 @@ If there is something wrong, you may correct me or if you have any suggestions, 
 There are 3 view:
 
 1. Chart of Accounts
-
 2. Balance Sheet (Monthly) --> Prices calculated as most recent to report date.
-
 3. Income Statement (Monthly)
 
-==NOTE: Calculations may wrong, you should test your data before use it.==
+> [!CAUTION]
+> Calculations may wrong, you must test your data before use it.
 
 
 ## How to use?
 
-1. Copy paste all codes one by one which is starting with 'Chart of Accounts'
+1. Copy paste all codes one by one which is starting with **'Chart of Accounts'**
 2. Select the views created. Example: ``` SELECT * FROM balance_sheet_monthly ```
