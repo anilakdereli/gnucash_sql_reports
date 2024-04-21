@@ -1,4 +1,3 @@
-CREATE OR REPLACE VIEW balance_sheet_monthly AS
 WITH gnucash_date AS(
 
 	SELECT

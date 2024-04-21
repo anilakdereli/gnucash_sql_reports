@@ -1,4 +1,3 @@
-CREATE OR REPLACE VIEW income_statement_monthly AS
 WITH gnucash_date AS(
 
 	SELECT
