@@ -65,6 +65,7 @@ JOIN transactions t ON true
 LEFT JOIN splits s ON t.guid = s.tx_guid
 LEFT JOIN accounts a ON a.guid = s.account_guid
 
+WHERE a.account_type NOT IN ('INCOME', 'EXPENSE')
 
 GROUP BY a.guid, d.date
 ORDER BY a.guid, d.date
