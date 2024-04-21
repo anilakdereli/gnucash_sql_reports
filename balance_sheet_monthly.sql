@@ -49,8 +49,7 @@ balance_sheet_monthly AS(
 SELECT
 
 		a.guid AS account_guid,
-		SUM(CASE WHEN t.post_date < d.date THEN ((s.quantity_num * 1.0) / s.quantity_denom) ELSE 0 END)
-		*
+		SUM(CASE WHEN t.post_date < d.date THEN s.quantity_num * 1.0 / s.quantity_denom ELSE 0 END) *
 		COALESCE((
 		SELECT
 				pm.value
@@ -59,15 +58,13 @@ SELECT
 		ORDER BY pm.date DESC
 		LIMIT 1)
 		,1) AS value,
-		d.date - INTERVAL '1 Day' AS date
+		d.date
 
 FROM dates d
 JOIN transactions t ON true
 LEFT JOIN splits s ON t.guid = s.tx_guid
 LEFT JOIN accounts a ON a.guid = s.account_guid
-LEFT JOIN prices_monthly pm ON a.commodity_guid = pm.commodity_guid
 
-WHERE a.account_type NOT IN ('INCOME', 'EXPENSE')
 
 GROUP BY a.guid, d.date
 ORDER BY a.guid, d.date
@@ -86,7 +83,7 @@ SELECT
 		coa.account_level4,
 		coa.account_level5,
 		coa.account_level6,
-		ROUND(bsm.value,2) AS value,
+		ROUND(bsm.value, 2) AS value,
 		bsm.date
 
 FROM balance_sheet_monthly bsm
