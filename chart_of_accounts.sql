@@ -1,30 +1,31 @@
 CREATE OR REPLACE VIEW chart_of_accounts AS
 WITH RECURSIVE accounthierarchy AS (
 	 
-	SELECT 
+SELECT 
 		a.guid,
 		a.parent_guid,
 		a.name AS name,
 		a.name :: TEXT AS account_path,
 		0 AS depth_level
-	FROM accounts a
-	WHERE a.parent_guid IS NULL
 
-	UNION ALL
+FROM accounts a
+WHERE a.parent_guid IS NULL
 
-	SELECT 
+UNION ALL
+
+SELECT 
 		a.guid,
 		a.parent_guid,
 		a.name,
 		(ah.account_path || ':') || a.name AS account_path,
 		ah.depth_level + 1 AS depth_level
-	FROM accounts a
-	JOIN accounthierarchy ah ON a.parent_guid = ah.guid
+
+FROM accounts a
+JOIN accounthierarchy ah ON a.parent_guid = ah.guid
 
 )
 
-	SELECT
-
+SELECT
 		ac.guid AS account_guid,
 		a.commodity_guid,
 		CASE
@@ -45,9 +46,8 @@ WITH RECURSIVE accounthierarchy AS (
 		split_part(ac.account_path, ':', 6) AS account_level5,
 		split_part(ac.account_path, ':', 7) AS account_level6
 
-	FROM accounthierarchy ac
-	JOIN accounts a ON a.guid = ac.guid
-	JOIN commodities c ON c.guid = a.commodity_guid
-	WHERE ac.parent_guid IS NOT NULL
-	ORDER BY a.code, main_account_type, ac.account_path;
-
+FROM accounthierarchy ac
+JOIN accounts a ON a.guid = ac.guid
+JOIN commodities c ON c.guid = a.commodity_guid
+WHERE ac.parent_guid IS NOT NULL
+ORDER BY a.code, main_account_type, ac.account_path;

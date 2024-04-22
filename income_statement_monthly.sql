@@ -1,39 +1,40 @@
 WITH gnucash_date AS(
 
-	SELECT
-			date_trunc('month', post_date) AS gnucash_date
-	FROM transactions
-	ORDER BY post_date ASC
-	LIMIT 1
+SELECT
+		date_trunc('month', post_date) AS gnucash_date
+
+FROM transactions
+ORDER BY post_date ASC
+LIMIT 1
 
 ),
 
 dates AS (
 
-	SELECT
-			generate_series(gnucash_date, current_date, '1 Month') :: DATE AS start_date,
-			generate_series(gnucash_date + INTERVAL '1 Month', current_date + INTERVAL '1 Month', '1 Month') :: DATE AS end_date
-	FROM gnucash_date
+SELECT
+		generate_series(gnucash_date, current_date, '1 Month') :: DATE AS start_date,
+		generate_series(gnucash_date + INTERVAL '1 Month', current_date + INTERVAL '1 Month', '1 Month') :: DATE AS end_date
+FROM gnucash_date
 			
 
 ),
 
 income_statement_monthly AS(
 
-	SELECT
-			a.guid AS account_guid,
-			SUM(CASE WHEN t.post_date < d.end_date AND t.post_date >= start_date THEN (s.value_num * 1.0) / s.value_denom ELSE 0 END) AS value,
-			d.start_date,
-			d.end_date
-	FROM dates d
-	JOIN transactions t ON TRUE
-	JOIN splits s ON t.guid = s.tx_guid
-	JOIN accounts a ON a.guid = s.account_guid
-	
-	WHERE a.account_type IN ('INCOME', 'EXPENSE') AND t.guid NOT IN (SELECT t.guid FROM transactions t JOIN splits s ON t.guid = s.tx_guid JOIN accounts a ON a.guid = s.account_guid WHERE a.account_type = 'EQUITY')
-	
-	GROUP BY a.guid, d.start_date, d.end_date
-	ORDER BY a.guid, d.start_date
+SELECT
+		a.guid AS account_guid,
+		SUM(CASE WHEN t.post_date < d.end_date AND t.post_date >= start_date THEN (s.value_num * 1.0) / s.value_denom ELSE 0 END) AS value,
+		d.start_date,
+		d.end_date
+FROM dates d
+JOIN transactions t ON TRUE
+JOIN splits s ON t.guid = s.tx_guid
+JOIN accounts a ON a.guid = s.account_guid
+
+WHERE a.account_type IN ('INCOME', 'EXPENSE') AND t.guid NOT IN (SELECT t.guid FROM transactions t JOIN splits s ON t.guid = s.tx_guid JOIN accounts a ON a.guid = s.account_guid WHERE a.account_type = 'EQUITY')
+
+GROUP BY a.guid, d.start_date, d.end_date
+ORDER BY a.guid, d.start_date
 
 )
 
