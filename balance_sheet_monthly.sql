@@ -81,6 +81,8 @@ SELECT
 	coa.account_level6,
 	ROUND(bsm.value, 2) AS value,
 	bsm.date
-FROM balance_sheet_monthly bsm
-JOIN chart_of_accounts coa ON coa.account_guid = bsm.account_guid
-ORDER BY coa.account_code, date;
+FROM
+	balance_sheet_monthly bsm
+	JOIN chart_of_accounts coa ON coa.account_guid = bsm.account_guid
+ORDER BY
+	coa.account_code, date;
