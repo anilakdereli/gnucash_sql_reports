@@ -1,24 +1,15 @@
-# Gnucash - Financial Statement SQL Queries
+---
+id: 20240510220565
+category: fleeting
+review: 0
+secret-level: public
+---
+# [[Gnucash - SQL Financial Reports]]
+#fleeting, #project, #gnucash, #sql
 
-Hi!
+This projects aims to develop custom Gnucash reports based on PostgreSQL server. Gnucash reports may have limited reports options and lack of individual analyze abilities. Therefore, created custom SQL reports to deep or custom analyze the data in Gnucash.
 
-I was not comfortable with Gnucash reports. Therefore, I was searching another solutions which fits my needs. I found the solution with PostgreSQL & Apache Superset (BI/Dashboard Tool).
+>[!CAUTION]
+> These queries are not official queries, made it by intermediate SQL knowledges. Therefore, calculation may wrong, you have to test your data before use it.
 
-I needed to write SQL queries own my own with my intermediate SQL knowledge. Anyway, I wanted to share the codes to may help other people too. I hope it helps! :)
-
-If there is something wrong, you may correct me or if you have any suggestions, I would like to listen to it.
-
-There are 3 view:
-
-1. Chart of Accounts
-2. Balance Sheet (Monthly) --> Prices calculated as most recent to report date.
-3. Income Statement (Monthly)
-
-> [!CAUTION]
-> Calculations may wrong, you must test your data before use it.
-
-
-## How to use?
-
-1. Copy paste all codes one by one which is starting with **'Chart of Accounts'**
-2. Select the views created. Example: ``` SELECT * FROM balance_sheet_monthly ```
+![[📎 Attachments/Pasted image 20240510232810.png]]
