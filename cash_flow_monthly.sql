@@ -65,7 +65,7 @@ SELECT
 	coa.account_level6,
 	ROUND(ism.cash_in,2) AS cash_in,
 	ROUND(ism.cash_out,2) AS cash_out,
-	ROUND(ism.cash_balance,2) AS cash_balance,
+	SUM(ROUND(ism.cash_balance,2)) OVER (ORDER BY coa.account_guid, ism.start_date) AS cash_balance,
 	ism.start_date,
 	(ism.end_date - INTERVAL '1 Day') :: DATE AS end_date
 FROM
