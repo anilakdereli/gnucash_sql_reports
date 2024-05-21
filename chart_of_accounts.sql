@@ -1,5 +1,5 @@
 /*
-# Gnucash - SQL Financial Reports
+Gnucash - SQL Financial Reports
 
 This projects aims to develop custom Gnucash reports based on PostgreSQL server. Gnucash reports may have limited reports options and lack of individual analyze abilities. Therefore, created custom SQL reports to deep or custom analyze the data in Gnucash.
 

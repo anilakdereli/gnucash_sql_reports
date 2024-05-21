@@ -1,5 +1,5 @@
 /*
-# Gnucash - SQL Financial Reports
+Gnucash - SQL Financial Reports
 
 This projects aims to develop custom Gnucash reports based on PostgreSQL server. Gnucash reports may have limited reports options and lack of individual analyze abilities. Therefore, created custom SQL reports to deep or custom analyze the data in Gnucash.
 
@@ -33,7 +33,9 @@ FROM
 income_statement_monthly AS(
 SELECT
 	a.guid AS account_guid,
-	SUM(CASE WHEN t.post_date < d.end_date AND t.post_date >= start_date THEN (s.value_num * 1.0) / s.value_denom ELSE 0 END) AS value,
+	SUM(CASE WHEN t.post_date < d.end_date AND t.post_date >= start_date AND s.value_num > 0 THEN (s.value_num * 1.0) / s.value_denom ELSE 0 END) AS cash_in,
+	SUM(CASE WHEN t.post_date < d.end_date AND t.post_date >= start_date AND s.value_num < 0 THEN (s.value_num * 1.0) / s.value_denom ELSE 0 END) AS cash_out,
+	SUM(CASE WHEN t.post_date < d.end_date AND t.post_date >= start_date THEN (s.value_num * 1.0) / s.value_denom ELSE 0 END) AS cash_balance,
 	d.start_date,
 	d.end_date
 FROM 
@@ -43,7 +45,6 @@ FROM
 	JOIN accounts a ON a.guid = s.account_guid
 WHERE
 	a.account_type = 'CASH'
-	AND t.guid NOT IN (SELECT t.guid FROM transactions t JOIN splits s ON t.guid = s.tx_guid JOIN accounts a ON a.guid = s.account_guid WHERE a.account_type = 'EQUITY')
 GROUP BY 
 	a.guid, d.start_date, d.end_date
 ORDER BY
@@ -62,7 +63,9 @@ SELECT
 	coa.account_level4,
 	coa.account_level5,
 	coa.account_level6,
-	ROUND(ism.value,2) * -1 AS value,
+	ROUND(ism.cash_in,2) AS cash_in,
+	ROUND(ism.cash_out,2) AS cash_out,
+	ROUND(ism.cash_balance,2) AS cash_balance,
 	ism.start_date,
 	(ism.end_date - INTERVAL '1 Day') :: DATE AS end_date
 FROM
